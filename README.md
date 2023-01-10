@@ -25,8 +25,6 @@ python3 main_train.py -h
 Then you can get that:
 
 ```bash
-Warning: Gym version v0.24.1 has a number of critical issues with `gym.make` such that environment observation and action spaces are incorrectly evaluated, raising i
-ncorrect errors and warning . It is recommend to downgrading to v0.23.1 or upgrading to v0.25.1                                                                      
 usage: main_train.py [-h] [--env ENV] [--seed SEED] [--epochs EPOCHS] [--exp_name EXP_NAME]                                                                          
                      [--data_dir DATA_DIR] [--debug] [--cuda_device [CUDA_DEVICE]] [--lr [LR]]                                                                       
                      [--replay_size [REPLAY_SIZE]] [--batch_size [BATCH_SIZE]] [--gamma [GAMMA]]                                                                     
