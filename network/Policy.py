@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch
 from torch.nn import functional as F
 
-class TanhGaussianPolicy(Mlp):
+class Policy(Mlp):
     """
     A Gaussian policy network with Tanh to enforce action limits
     """

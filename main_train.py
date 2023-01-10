@@ -9,11 +9,11 @@ from modules.logger import *
 from modules.bias_normal import *
 from network.config import *
 from network.agent import Agent
-from network.Policy import TanhGaussianPolicy
+from network.Policy import Policy
 
-def redq_sac(env_name, seed=0, epochs='mbpo', steps_per_epoch=1000,
+def redq_exp(env_name, seed=0, epochs='mbpo', steps_per_epoch=1000,
              max_ep_len=1000, n_evals_per_epoch=1,
-             logger_kwargs=dict(), debug=False,
+             logger_kwargs=dict(), debug=False,cuda_device=0,
              # following are agent related hyperparameters
              hidden_sizes=(256, 256), replay_size=int(1e6), batch_size=256,
              lr=3e-4, gamma=0.99, polyak=0.995,
@@ -125,7 +125,7 @@ def redq_sac(env_name, seed=0, epochs='mbpo', steps_per_epoch=1000,
 
     for t in range(total_steps):
         # get action from agent
-        a = agent.get_exploration_action(o, env)
+        a = agent.get_action(o, env, test=False)
         # Step the env, get next observation, reward and done signal
         o2, r, d, _ = env.step(a)
 
@@ -214,6 +214,28 @@ if __name__ == '__main__':
                         help='The quick check for the code')
     parser.add_argument("--cuda_device", type=int, nargs="?",
                         default=0, help="Which GPU will be used")
+    parser.add_argument("--lr", type=float, nargs="?",
+                        default=3e-4, help="The learning rate")
+    parser.add_argument("--replay_size", type=int, nargs="?",
+                        default=int(1e6), help="The replaybuffer's size")
+    parser.add_argument("--batch_size", type=int, nargs="?",
+                        default=256, help="The batch size")
+    parser.add_argument("--gamma", type=float, nargs="?",
+                        default=0.99, help="The discount factor")
+    parser.add_argument("--polyak", type=float, nargs="?",
+                        default=0.995, help="Hyperparameter for polyak averaged target networks")
+    parser.add_argument("--alpha", type=float, nargs="?",
+                        default=0.2, help="SAC entropy hyperparameter")
+    parser.add_argument("--start_steps", type=int, nargs="?",
+                        default=5000, help="The number of random data collected in the beginning of training")
+    parser.add_argument("--utd_ratio", type=int, nargs="?",
+                        default=20, help="The update-to-data ratio")
+    parser.add_argument("--num_Q", type=int, nargs="?",
+                        default=10, help="The number of Q networks in the Q ensemble")
+    parser.add_argument("--num_min", type=int, nargs="?",
+                        default=2, help="The number of sampled Q values to take minimal from")
+    parser.add_argument("--policy_update_delay", type=int, nargs="?",
+                        default=20, help="how many updates until we update policy network")
     args = parser.parse_args()
 
     # modify the code here if you want to use a different naming scheme
@@ -225,5 +247,5 @@ if __name__ == '__main__':
     logger_kwargs = logger_kwargs_setup(
         exp_full_name, args.seed, args.data_dir)
 
-    redq_sac(args.env, seed=args.seed, epochs=args.epochs,
-             logger_kwargs=logger_kwargs, debug=args.debug)
+    redq_exp(args.env, seed=args.seed, epochs=args.epochs,
+             logger_kwargs=logger_kwargs, debug=args.debug,cuda_device=args.cuda_device,lr=args.lr,replay_size=args.replay_size,batch_size=args.batch_size,gamma=args.gamma,polyak=args.polyak,alpha=args.alpha,start_steps=args.start_steps,utd_ratio=args.utd_ratio,num_Q=args.num_Q,num_min=args.num_min,policy_update_delay=args.policy_update_delay)

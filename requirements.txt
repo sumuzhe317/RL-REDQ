@@ -1,0 +1,8 @@
+gym==0.24.1
+joblib==1.2.0
+matplotlib==3.6.2
+numpy==1.23.0
+pandas==1.5.2
+seaborn==0.8.1
+setuptools==47.1.0
+torch==1.11.0+cu113

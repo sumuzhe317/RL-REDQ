@@ -57,7 +57,7 @@ def test_agent(agent, test_env, max_ep_len, logger, n_eval=1):
         o, r, d, ep_ret, ep_len = test_env.reset(), 0, False, 0, 0
         while not (d or (ep_len == max_ep_len)):
             # Take deterministic actions at test time
-            a = agent.get_test_action(o)
+            a = agent.get_action(o)
             o, r, d, _ = test_env.step(a)
             ep_ret += r
             ep_len += 1
